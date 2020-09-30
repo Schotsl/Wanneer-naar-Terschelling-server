@@ -1,13 +1,13 @@
 const functions = require('firebase-functions');
 const validator = require('validator');
 const express = require('express');
+const dotenv = require('dotenv');
 const admin = require('firebase-admin');
 
+dotenv.config();
+
 // Initialize app using local credentials 
-admin.initializeApp({
-  credential: admin.credential.cert(require('./credentails.json')),
-  databaseURL: "https://wanneer-naar-terschellin-ba99f.firebaseio.com"
-});
+admin.initializeApp();
 
 // Create firestore database
 const database = admin.firestore();
