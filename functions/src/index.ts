@@ -26,25 +26,25 @@ app.post('/api/v1/vacation', async (request: Request, response: Response) => {
   const ending = request.body.ending;
 
   // Validate all the properties
-  if (!validator.isLength(name, {'min': 3, 'max': 255}) || !validator.isAscii(name)) {
+  if (!name || !validator.isLength(name, {'min': 3, 'max': 255}) || !validator.isAscii(name)) {
     response.status(400);
     response.send(`Invalid 'name' property`);
     return;
   }
 
-  if (!validator.isHexColor(color)) {
+  if (!color || !validator.isHexColor(color)) {
     response.status(400);
     response.send(`Invalid 'color' property`);
     return;
   }
 
-  if (!validator.isDate(start, `MM/DD/YYYY`)) {
+  if (!start || !validator.isDate(start, `MM/DD/YYYY`)) {
     response.status(400);
     response.send(`Invalid 'start' property`);
     return;
   }
 
-  if (!validator.isDate(ending, `MM/DD/YYYY`)) {
+  if (!ending || !validator.isDate(ending, `MM/DD/YYYY`)) {
     response.status(400);
     response.send(`Invalid 'ending' property`);
     return;
