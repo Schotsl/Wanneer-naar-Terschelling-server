@@ -63,7 +63,6 @@ app.post('/api/v1/vacation', async (request: Request, response: Response) => {
 
   // Return the object with an ID to the user
   const id = document.id;
-
   response.status(200)
   response.send({ id, ...vacation });
   return;
@@ -83,6 +82,57 @@ app.get('/api/v1/vacation', async (request: Request, response: Response) => {
   // Return the object to the user
   response.status(200)
   response.send(documents);
+  return;
+});
+
+app.put('/api/v1/vacation/:id', async (request: Request, response: Response) => {
+  // Store body properties in variables
+  const id = request.params.id;
+  const name = request.body.name;
+  const color = request.body.color;
+  const start = request.body.start;
+  const ending = request.body.ending;
+
+  // Validate all the properties
+  if (!name || !validator.isLength(name, {'min': 3, 'max': 255}) || !validator.isAscii(name)) {
+    response.status(400);
+    response.send(`Invalid 'name' property`);
+    return;
+  }
+
+  if (!color || !validator.isHexColor(color)) {
+    response.status(400);
+    response.send(`Invalid 'color' property`);
+    return;
+  }
+
+  if (!start || !validator.isDate(start, `MM/DD/YYYY`)) {
+    response.status(400);
+    response.send(`Invalid 'start' property`);
+    return;
+  }
+
+  if (!ending || !validator.isDate(ending, `MM/DD/YYYY`)) {
+    response.status(400);
+    response.send(`Invalid 'ending' property`);
+    return;
+  }
+
+  // Transform properties into one object
+  const vacation = {
+    name: name,
+    color: color,
+    start: start,
+    ending: ending
+  }
+
+  // Update the object
+  const document = await database.collection('vacation').doc(id);
+  await document.update(vacation);
+
+  // Return the object with an ID to the user
+  response.status(200)
+  response.send({ id, ...vacation });
   return;
 });
 
