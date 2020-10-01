@@ -59,21 +59,26 @@ app.post('/api/v1/vacation', async (request: Request, response: Response) => {
   }
 
   // Save the object in the database
-  await database.collection('vacation').add(vacation);
+  const document = await database.collection('vacation').add(vacation);
 
-  // Return the object to the user
+  // Return the object with an ID to the user
+  const id = document.id;
+
   response.status(200)
-  response.send(vacation);
+  response.send({ id, ...vacation });
   return;
 });
-
 
 app.get('/api/v1/vacation', async (request: Request, response: Response) => {
   // Fetch the collection by name
   const collection = await database.collection('vacation').get();
 
   // Fetch every document and create an array
-  const documents = collection.docs.map((document: any) => document.data());
+  const documents = collection.docs.map((document: any) => {
+    const data = document.data();
+    const id = document.id;
+    return { id, ...data };
+  });
 
   // Return the object to the user
   response.status(200)
