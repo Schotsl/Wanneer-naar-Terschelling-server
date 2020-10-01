@@ -48,13 +48,13 @@ app.post('/api/v1/vacation', async (request: Request, response: Response) => {
     return;
   }
 
-  if (!start || !validator.isDate(start, `MM/DD/YYYY`)) {
+  if (!start || !validator.isDate(start, `YYYY-MM-DD`)) {
     response.status(400);
     response.send(`Invalid 'start' property`);
     return;
   }
 
-  if (!ending || !validator.isDate(ending, `MM/DD/YYYY`)) {
+  if (!ending || !validator.isDate(ending, `YYYY-MM-DD`)) {
     response.status(400);
     response.send(`Invalid 'ending' property`);
     return;
@@ -116,13 +116,13 @@ app.put('/api/v1/vacation/:id', async (request: Request, response: Response) => 
     return;
   }
 
-  if (!start || !validator.isDate(start, `MM/DD/YYYY`)) {
+  if (!start || !validator.isDate(start, `YYYY-MM-DD`)) {
     response.status(400);
     response.send(`Invalid 'start' property`);
     return;
   }
 
-  if (!ending || !validator.isDate(ending, `MM/DD/YYYY`)) {
+  if (!ending || !validator.isDate(ending, `YYYY-MM-DD`)) {
     response.status(400);
     response.send(`Invalid 'ending' property`);
     return;
