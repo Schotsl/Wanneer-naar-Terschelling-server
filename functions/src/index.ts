@@ -61,10 +61,6 @@ app.post('/api/v1/vacation', async (request: Request, response: Response) => {
   // Save the object in the database
   await database.collection('vacation').add(vacation);
 
-  const snapshot = await database.collection('vacation').get();
-  console.log(snapshot.docs.map((doc: any) => doc.data()));
-
-
   // Return the object to the user
   response.status(200)
   response.send(vacation);
