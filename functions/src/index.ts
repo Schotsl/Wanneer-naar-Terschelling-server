@@ -1,3 +1,4 @@
+const bodyparser = require('body-parser');
 const functions = require('firebase-functions');
 const validator = require('validator');
 const express = require('express');
@@ -13,10 +14,19 @@ admin.initializeApp();
 const database = admin.firestore();
 
 // Import types
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
 // Create express app
 const app = express();
+
+// Cors fix
+app.use(bodyparser.json());
+app.use(function(request: Request, response: Response, next: NextFunction) {
+  response.header("Access-Control-Allow-Origin", "*");
+  response.header("Access-Control-Allow-Methods", "*");
+  response.header("Access-Control-Allow-Headers", "*");
+  next();
+});
 
 app.post('/api/v1/vacation', async (request: Request, response: Response) => {
   // Store body properties in variables
