@@ -136,4 +136,18 @@ app.put('/api/v1/vacation/:id', async (request: Request, response: Response) => 
   return;
 });
 
+app.delete('/api/v1/vacation/:id', async (request: Request, response: Response) => {
+  // Fetch the document ID
+  const id = request.params.id;
+
+  // Delete the object
+  const document = await database.collection('vacation').doc(id);
+  await document.delete();
+
+  // Return 204 No content after deletion
+  response.status(204)
+  response.send();
+  return;
+});
+
 exports.app = functions.https.onRequest(app);
