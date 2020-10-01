@@ -140,8 +140,18 @@ app.delete('/api/v1/vacation/:id', async (request: Request, response: Response) 
   // Fetch the document ID
   const id = request.params.id;
 
-  // Delete the object
+  // Fetch the object and existance
   const document = await database.collection('vacation').doc(id);
+  const snapshot = await document.get();
+
+  // Check if snapshot exists
+  if (!snapshot.exists) {
+    response.status(404);
+    response.send();
+    return;
+  }
+
+  // If the object exists delete it
   await document.delete();
 
   // Return 204 No content after deletion
