@@ -95,6 +95,27 @@ app.get('/api/v1/vacation', async (request: Request, response: Response) => {
   return;
 });
 
+app.get('/api/v1/vacation/:id', async (request: Request, response: Response) => {
+  // Fetch the document ID
+  const id = request.params.id;
+
+  // Fetch the object and existance
+  const document = await database.collection('vacation').doc(id);
+  const snapshot = await document.get();
+
+  // Check if snapshot exists
+  if (!snapshot.exists) {
+    response.status(404);
+    response.send();
+    return;
+  }
+
+  // Return the object with an ID to the user
+  response.status(200)
+  response.send({ id, ...snapshot.data() });
+  return;
+});
+
 app.put('/api/v1/vacation/:id', async (request: Request, response: Response) => {
   // Store body properties in variables
   const id = request.params.id;
