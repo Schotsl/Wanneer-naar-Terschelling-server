@@ -35,7 +35,27 @@ app.post('/api/v1/vacation', async (request: Request, response: Response) => {
   const start = request.body.start;
   const ending = request.body.ending;
 
+  const holst = request.body.family.holst;
+  const other = request.body.family.other;
+  const hartman = request.body.family.hartman;
+  const steenmeijer = request.body.family.steenmeijer;
+
   // Validate all the properties
+  if (
+    holst === undefined || 
+    other === undefined ||
+    hartman === undefined || 
+    steenmeijer === undefined || 
+    typeof(holst) !== `boolean` || 
+    typeof(other) !== `boolean` || 
+    typeof(hartman) !== `boolean` || 
+    typeof(steenmeijer) !== `boolean`
+  ) {
+    response.status(400);
+    response.send(`Invalid 'family' property`);
+    return;
+  }
+
   if (!name || !validator.isLength(name, {'min': 3, 'max': 255}) || !validator.isAscii(name)) {
     response.status(400);
     response.send(`Invalid 'name' property`);
@@ -48,13 +68,13 @@ app.post('/api/v1/vacation', async (request: Request, response: Response) => {
     return;
   }
 
-  if (!start || !validator.isDate(start, `YYYY-MM-DD`)) {
+  if (!start || !validator.isDate(start, `DD-MM-YYYY`)) {
     response.status(400);
     response.send(`Invalid 'start' property`);
     return;
   }
 
-  if (!ending || !validator.isDate(ending, `YYYY-MM-DD`)) {
+  if (!ending || !validator.isDate(ending, `DD-MM-YYYY`)) {
     response.status(400);
     response.send(`Invalid 'ending' property`);
     return;
@@ -65,7 +85,13 @@ app.post('/api/v1/vacation', async (request: Request, response: Response) => {
     name: name,
     color: color,
     start: start,
-    ending: ending
+    ending: ending,
+    family: {
+      holst,
+      other,
+      hartman,
+      steenmeijer
+    }
   }
 
   // Save the object in the database
