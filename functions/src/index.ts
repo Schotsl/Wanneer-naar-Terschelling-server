@@ -21,7 +21,7 @@ const app = express();
 
 // Cors fix
 app.use(bodyparser.json());
-app.use(function(request: Request, response: Response, next: NextFunction) {
+app.use(function (request: Request, response: Response, next: NextFunction) {
   response.header("Access-Control-Allow-Origin", "*");
   response.header("Access-Control-Allow-Methods", "*");
   response.header("Access-Control-Allow-Headers", "*");
@@ -42,21 +42,21 @@ app.post('/api/v1/vacation', async (request: Request, response: Response) => {
 
   // Validate all the properties
   if (
-    holst === undefined || 
+    holst === undefined ||
     other === undefined ||
-    hartman === undefined || 
-    steenmeijer === undefined || 
-    typeof(holst) !== `boolean` || 
-    typeof(other) !== `boolean` || 
-    typeof(hartman) !== `boolean` || 
-    typeof(steenmeijer) !== `boolean`
+    hartman === undefined ||
+    steenmeijer === undefined ||
+    typeof (holst) !== `boolean` ||
+    typeof (other) !== `boolean` ||
+    typeof (hartman) !== `boolean` ||
+    typeof (steenmeijer) !== `boolean`
   ) {
     response.status(400);
     response.send(`Invalid 'family' property`);
     return;
   }
 
-  if (!name || !validator.isLength(name, {'min': 3, 'max': 255}) || !validator.isAscii(name)) {
+  if (!name || !validator.isLength(name, { 'min': 3, 'max': 255 }) || !validator.isAscii(name)) {
     response.status(400);
     response.send(`Invalid 'name' property`);
     return;
@@ -151,7 +151,7 @@ app.put('/api/v1/vacation/:id', async (request: Request, response: Response) => 
   const ending = request.body.ending;
 
   // Validate all the properties
-  if (!name || !validator.isLength(name, {'min': 3, 'max': 255}) || !validator.isAscii(name)) {
+  if (!name || !validator.isLength(name, { 'min': 3, 'max': 255 }) || !validator.isAscii(name)) {
     response.status(400);
     response.send(`Invalid 'name' property`);
     return;
