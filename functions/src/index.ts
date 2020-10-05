@@ -163,13 +163,13 @@ app.put('/api/v1/vacation/:id', async (request: Request, response: Response) => 
     return;
   }
 
-  if (!start || !validator.isDate(start, `YYYY-MM-DD`)) {
+  if (!start || !validator.isDate(start, `DD-MM-YYYY`)) {
     response.status(400);
     response.send(`Invalid 'start' property`);
     return;
   }
 
-  if (!ending || !validator.isDate(ending, `YYYY-MM-DD`)) {
+  if (!ending || !validator.isDate(ending, `DD-MM-YYYY`)) {
     response.status(400);
     response.send(`Invalid 'ending' property`);
     return;
