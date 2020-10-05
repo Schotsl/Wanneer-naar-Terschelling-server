@@ -150,7 +150,27 @@ app.put('/api/v1/vacation/:id', async (request: Request, response: Response) => 
   const start = request.body.start;
   const ending = request.body.ending;
 
+  const holst = request.body.family.holst;
+  const other = request.body.family.other;
+  const hartman = request.body.family.hartman;
+  const steenmeijer = request.body.family.steenmeijer;
+
   // Validate all the properties
+  if (
+    holst === undefined ||
+    other === undefined ||
+    hartman === undefined ||
+    steenmeijer === undefined ||
+    typeof (holst) !== `boolean` ||
+    typeof (other) !== `boolean` ||
+    typeof (hartman) !== `boolean` ||
+    typeof (steenmeijer) !== `boolean`
+  ) {
+    response.status(400);
+    response.send(`Invalid 'family' property`);
+    return;
+  }
+
   if (!name || !validator.isLength(name, { 'min': 3, 'max': 255 }) || !validator.isAscii(name)) {
     response.status(400);
     response.send(`Invalid 'name' property`);
@@ -180,7 +200,13 @@ app.put('/api/v1/vacation/:id', async (request: Request, response: Response) => 
     name: name,
     color: color,
     start: start,
-    ending: ending
+    ending: ending,
+    family: {
+      holst,
+      other,
+      hartman,
+      steenmeijer
+    }
   }
 
   // Update the object
