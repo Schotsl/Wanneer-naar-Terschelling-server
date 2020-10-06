@@ -31,7 +31,7 @@ app.use(function (request: Request, response: Response, next: NextFunction) {
 app.post('/api/v1/vacation', async (request: Request, response: Response) => {
   // Store body properties in variables
   const end = request.body.end;
-  const name = request.body.name;
+  const title = request.body.title;
   const color = request.body.color;
   const start = request.body.start;
 
@@ -56,9 +56,9 @@ app.post('/api/v1/vacation', async (request: Request, response: Response) => {
     return;
   }
 
-  if (!name || !validator.isLength(name, { 'min': 3, 'max': 255 }) || !validator.isAscii(name)) {
+  if (!title || !validator.isLength(title, { 'min': 3, 'max': 255 }) || !validator.isAscii(title)) {
     response.status(400);
-    response.send(`Invalid 'name' property`);
+    response.send(`Invalid 'title' property`);
     return;
   }
 
@@ -83,7 +83,7 @@ app.post('/api/v1/vacation', async (request: Request, response: Response) => {
   // Transform properties into one object
   const vacation = {
     end: end,
-    name: name,
+    title: title,
     color: color,
     start: start,
     family: {
@@ -105,7 +105,7 @@ app.post('/api/v1/vacation', async (request: Request, response: Response) => {
 });
 
 app.get('/api/v1/vacation', async (request: Request, response: Response) => {
-  // Fetch the collection by name
+  // Fetch the collection
   const collection = await database.collection('vacation').get();
 
   // Fetch every document and create an array
@@ -146,7 +146,7 @@ app.put('/api/v1/vacation/:id', async (request: Request, response: Response) => 
   // Store body properties in variables
   const id = request.params.id;
   const end = request.body.end;
-  const name = request.body.name;
+  const title = request.body.title;
   const color = request.body.color;
   const start = request.body.start;
 
@@ -171,9 +171,9 @@ app.put('/api/v1/vacation/:id', async (request: Request, response: Response) => 
     return;
   }
 
-  if (!name || !validator.isLength(name, { 'min': 3, 'max': 255 }) || !validator.isAscii(name)) {
+  if (!title || !validator.isLength(title, { 'min': 3, 'max': 255 }) || !validator.isAscii(title)) {
     response.status(400);
-    response.send(`Invalid 'name' property`);
+    response.send(`Invalid 'title' property`);
     return;
   }
 
@@ -198,7 +198,7 @@ app.put('/api/v1/vacation/:id', async (request: Request, response: Response) => 
   // Transform properties into one object
   const vacation = {
     end: end,
-    name: name,
+    title: title,
     color: color,
     start: start,
     family: {
