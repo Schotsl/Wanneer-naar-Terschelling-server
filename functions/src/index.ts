@@ -291,6 +291,15 @@ app.put('/api/v1/vacation/:id', async (request: Request, response: Response) => 
 
   // Update the object
   const document = await database.collection('vacation').doc(id);
+  const snapshot = await document.get();
+
+  // Check if snapshot exists
+  if (!snapshot.exists) {
+    response.status(404);
+    response.send();
+    return;
+  }
+
   await document.update(vacation);
 
   // Return the object with an ID to the user
