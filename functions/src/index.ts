@@ -25,6 +25,25 @@ function generateString(day: number, month: number, year: number) {
   return `${dayString}-${monthString}-${year}`;
 }
 
+// Trash array data
+const trashArray = [
+  {
+    color: "#ffd800",
+    title: "Restafval",
+    dates: [[2, 16, 30], [13, 27], [12, 26], [9, 23], [7, 23], [4, 18], [2, 16, 30], [13, 27], [10, 24], [8, 22], [5, 19], [3, 17, 31]]
+  },
+  {
+    color: "#f4c430",
+    title: "Tuinafval",
+    dates: [[13, 27], [10, 24], [9, 23], [6, 20, 11, 25], [4, 18, 30, 11, 25], [15, 29, 8, 22], [13, 27, 6, 20], [10, 24, 3, 17, 31], [7, 21, 14, 28], [5, 19, 12, 26], [2, 16, 30], [14, 28]]
+  },
+  {
+    color: "#f0e130",
+    title: "Papier",
+    dates: [[4, 29], [26], [25], [22], [20], [17], [15], [12], [9], [7], [4], [2, 30]]
+  }
+];
+
 // Cors fix
 app.use(bodyparser.json());
 app.use(function (request: Request, response: Response, next: NextFunction) {
@@ -127,9 +146,9 @@ app.get('/api/v1/vacation', async (request: Request, response: Response) => {
     return { id, color, start, title, end };
   });
 
-  // START OF TEST
   const upcomingArray = [];
 
+  // Generate array of with date objects for the next three months
   for (let i = 0; i < 3; i ++) {
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth();
@@ -138,40 +157,29 @@ app.get('/api/v1/vacation', async (request: Request, response: Response) => {
     upcomingArray.push(new Date(modifiedMonth));
   }
 
-  const trashArray = [
-    {
-      title: "Restafval",
-      dates: [[2, 16, 30], [13, 27], [12, 26], [9, 23], [7, 23], [4, 18], [2, 16, 30], [13, 27], [10, 24], [8, 22], [5, 19], [3, 17, 31]]
-    },
-    {
-      title: "Tuinafval",
-      dates: [[13, 27], [10, 24], [9, 23], [6, 20, 11, 25], [4, 18, 30, 11, 25], [15, 29, 8, 22], [13, 27, 6, 20], [10, 24, 3, 17, 31], [7, 21, 14, 28], [5, 19, 12, 26], [2, 16, 30], [14, 28]]
-    },
-    {
-      title: "Papier",
-      dates: [[4, 29], [26], [25], [22], [20], [17], [15], [12], [9], [7], [4], [2, 30]]
-    }
-  ];
-
+  // Loop over every upcoming month
   upcomingArray.forEach((upcomingDate) => {
     const yearNumber = upcomingDate.getFullYear();
     const monthNumber = upcomingDate.getMonth();
 
+    // Loop over every category of trash
     trashArray.forEach((trashObject) => {
       const dateArray = trashObject.dates;
 
+      // Loop over every date stored in the dates property
       dateArray[monthNumber].forEach((dayNumber) => {
         documents.push({
-          'id': null,
-          'color': '#fffff',
+          // Set event properties
+          'color': trashObject.color,
           'title': trashObject.title,
+
+          // Generate formatted date string from Date object
           'end': generateString(dayNumber, monthNumber, yearNumber),
           'start': generateString(dayNumber, monthNumber, yearNumber),
         });
       });
     });
   });
-  // END OF TEST
 
   // Return the object to the user
   response.status(200)
