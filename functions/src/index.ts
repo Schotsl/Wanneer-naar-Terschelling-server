@@ -112,7 +112,13 @@ app.get('/api/v1/vacation', async (request: Request, response: Response) => {
   const documents = collection.docs.map((document: any) => {
     const data = document.data();
     const id = document.id;
-    return { id, ...data };
+
+    const color = data.color;
+    const start = data.start;
+    const title = data.title;
+    const end = data.end;
+
+    return { id, color, start, title, end };
   });
 
   // Return the object to the user
