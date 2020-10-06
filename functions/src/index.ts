@@ -59,6 +59,13 @@ app.post('/api/v1/vacation', async (request: Request, response: Response) => {
   const title = request.body.title;
   const color = request.body.color;
   const start = request.body.start;
+  const family = request.body.family;
+
+  if (family === undefined) {
+    response.status(400);
+    response.send(`Invalid 'family' property`);
+    return;  
+  }
 
   const holst = request.body.family.holst;
   const other = request.body.family.other;
@@ -215,6 +222,13 @@ app.put('/api/v1/vacation/:id', async (request: Request, response: Response) => 
   const title = request.body.title;
   const color = request.body.color;
   const start = request.body.start;
+  const family = request.body.family;
+
+  if (family === undefined) {
+    response.status(400);
+    response.send(`Invalid 'family' property`);
+    return;  
+  }
 
   const holst = request.body.family.holst;
   const other = request.body.family.other;
