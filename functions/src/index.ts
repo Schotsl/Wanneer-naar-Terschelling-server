@@ -30,10 +30,10 @@ app.use(function (request: Request, response: Response, next: NextFunction) {
 
 app.post('/api/v1/vacation', async (request: Request, response: Response) => {
   // Store body properties in variables
+  const end = request.body.end;
   const name = request.body.name;
   const color = request.body.color;
   const start = request.body.start;
-  const ending = request.body.ending;
 
   const holst = request.body.family.holst;
   const other = request.body.family.other;
@@ -74,18 +74,18 @@ app.post('/api/v1/vacation', async (request: Request, response: Response) => {
     return;
   }
 
-  if (!ending || !validator.isDate(ending, `DD-MM-YYYY`)) {
+  if (!end || !validator.isDate(end, `DD-MM-YYYY`)) {
     response.status(400);
-    response.send(`Invalid 'ending' property`);
+    response.send(`Invalid 'end' property`);
     return;
   }
 
   // Transform properties into one object
   const vacation = {
+    end: end,
     name: name,
     color: color,
     start: start,
-    ending: ending,
     family: {
       holst,
       other,
@@ -145,10 +145,10 @@ app.get('/api/v1/vacation/:id', async (request: Request, response: Response) => 
 app.put('/api/v1/vacation/:id', async (request: Request, response: Response) => {
   // Store body properties in variables
   const id = request.params.id;
+  const end = request.body.end;
   const name = request.body.name;
   const color = request.body.color;
   const start = request.body.start;
-  const ending = request.body.ending;
 
   const holst = request.body.family.holst;
   const other = request.body.family.other;
@@ -189,18 +189,18 @@ app.put('/api/v1/vacation/:id', async (request: Request, response: Response) => 
     return;
   }
 
-  if (!ending || !validator.isDate(ending, `DD-MM-YYYY`)) {
+  if (!end || !validator.isDate(end, `DD-MM-YYYY`)) {
     response.status(400);
-    response.send(`Invalid 'ending' property`);
+    response.send(`Invalid 'end' property`);
     return;
   }
 
   // Transform properties into one object
   const vacation = {
+    end: end,
     name: name,
     color: color,
     start: start,
-    ending: ending,
     family: {
       holst,
       other,
