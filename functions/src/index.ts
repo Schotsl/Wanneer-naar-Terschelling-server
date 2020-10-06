@@ -2,10 +2,7 @@ const bodyparser = require('body-parser');
 const functions = require('firebase-functions');
 const validator = require('validator');
 const express = require('express');
-const dotenv = require('dotenv');
 const admin = require('firebase-admin');
-
-dotenv.config();
 
 // Initialize app using local credentials 
 admin.initializeApp();
