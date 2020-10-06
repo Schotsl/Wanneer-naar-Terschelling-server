@@ -19,6 +19,15 @@ import { Request, Response, NextFunction } from 'express';
 // Create express app
 const app = express();
 
+function generateString(day: number, month: number, year: number) {
+  const offset = month + 1;
+
+  const dayString = day.toString().padStart(2, `0`);
+  const monthString = offset.toString().padStart(2, `0`);
+
+  return `${dayString}-${monthString}-${year}`;
+}
+
 // Cors fix
 app.use(bodyparser.json());
 app.use(function (request: Request, response: Response, next: NextFunction) {
@@ -120,6 +129,52 @@ app.get('/api/v1/vacation', async (request: Request, response: Response) => {
 
     return { id, color, start, title, end };
   });
+
+  // START OF TEST
+  const upcomingArray = [];
+
+  for (let i = 0; i < 3; i ++) {
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth();
+    const modifiedMonth = currentDate.setMonth(currentMonth + i);
+    
+    upcomingArray.push(new Date(modifiedMonth));
+  }
+
+  const trashArray = [
+    {
+      title: "Restafval",
+      dates: [[2, 16, 30], [13, 27], [12, 26], [9, 23], [7, 23], [4, 18], [2, 16, 30], [13, 27], [10, 24], [8, 22], [5, 19], [3, 17, 31]]
+    },
+    {
+      title: "Tuinafval",
+      dates: [[13, 27], [10, 24], [9, 23], [6, 20, 11, 25], [4, 18, 30, 11, 25], [15, 29, 8, 22], [13, 27, 6, 20], [10, 24, 3, 17, 31], [7, 21, 14, 28], [5, 19, 12, 26], [2, 16, 30], [14, 28]]
+    },
+    {
+      title: "Papier",
+      dates: [[4, 29], [26], [25], [22], [20], [17], [15], [12], [9], [7], [4], [2, 30]]
+    }
+  ];
+
+  upcomingArray.forEach((upcomingDate) => {
+    const yearNumber = upcomingDate.getFullYear();
+    const monthNumber = upcomingDate.getMonth();
+
+    trashArray.forEach((trashObject) => {
+      const dateArray = trashObject.dates;
+
+      dateArray[monthNumber].forEach((dayNumber) => {
+        documents.push({
+          'id': null,
+          'color': '#fffff',
+          'title': trashObject.title,
+          'end': generateString(dayNumber, monthNumber, yearNumber),
+          'start': generateString(dayNumber, monthNumber, yearNumber),
+        });
+      });
+    });
+  });
+  // END OF TEST
 
   // Return the object to the user
   response.status(200)
