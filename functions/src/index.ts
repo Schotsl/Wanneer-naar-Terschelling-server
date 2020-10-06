@@ -54,6 +54,15 @@ app.use(function (request: Request, response: Response, next: NextFunction) {
 });
 
 app.post('/api/v1/vacation', async (request: Request, response: Response) => {
+  // Fetch the client IP and validate it
+  const ip = request.headers['x-forwarded-for'] || request.connection.remoteAddress;
+
+  if (ip !== `80.61.199.248`) {
+    response.status(401);
+    response.send();
+    return;
+  }
+
   // Store body properties in variables
   const end = request.body.end;
   const title = request.body.title;
@@ -216,6 +225,15 @@ app.get('/api/v1/vacation/:id', async (request: Request, response: Response) => 
 });
 
 app.put('/api/v1/vacation/:id', async (request: Request, response: Response) => {
+  // Fetch the client IP and validate it
+  const ip = request.headers['x-forwarded-for'] || request.connection.remoteAddress;
+
+  if (ip !== `80.61.199.248`) {
+    response.status(401);
+    response.send();
+    return;
+  }
+
   // Store body properties in variables
   const id = request.params.id;
   const end = request.body.end;
@@ -309,6 +327,15 @@ app.put('/api/v1/vacation/:id', async (request: Request, response: Response) => 
 });
 
 app.delete('/api/v1/vacation/:id', async (request: Request, response: Response) => {
+  // Fetch the client IP and validate it
+  const ip = request.headers['x-forwarded-for'] || request.connection.remoteAddress;
+
+  if (ip !== `80.61.199.248`) {
+    response.status(401);
+    response.send();
+    return;
+  }
+
   // Fetch the document ID
   const id = request.params.id;
 
