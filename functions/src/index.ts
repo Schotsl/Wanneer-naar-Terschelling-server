@@ -3,6 +3,7 @@ const functions = require('firebase-functions');
 const validator = require('validator');
 const express = require('express');
 const admin = require('firebase-admin');
+const ical = require('ical-generator');
 
 // Initialize app using local credentials 
 admin.initializeApp();
@@ -201,6 +202,72 @@ app.get('/api/v1/vacation', async (request: Request, response: Response) => {
   response.status(200)
   response.send(documents);
   return;
+});
+
+app.get('/ical', async (request: Request, response: Response) => {
+  const cal = ical({
+    domain: 'github.com', 
+    name: 'Terschelling kalender'
+  });
+
+  // Fetch the collection
+  const collection = await database.collection('vacation').get();
+
+  // Fetch every document and create an array
+  collection.docs.forEach((document: any) => {
+    const data = document.data();
+
+    const start = data.start.split('-');
+    const end = data.end.split('-');
+
+    cal.createEvent({
+      summary: data.title,
+      allDay: true,
+
+      start: new Date(parseInt(start[2], 10),
+                      parseInt(start[1], 10) - 1,
+                      parseInt(start[0], 10)),
+
+      end: new Date(parseInt(end[2], 10),
+                      parseInt(end[1], 10) - 1,
+                      parseInt(end[0], 10) + 1),
+    });
+  });
+
+  const upcomingArray = [];
+
+  // Generate array of with date objects for the next three months
+  for (let i = 0; i < 3; i ++) {
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth();
+    const modifiedMonth = currentDate.setMonth(currentMonth + i);
+    
+    upcomingArray.push(new Date(modifiedMonth));
+  }
+  
+  // Loop over every upcoming month
+  upcomingArray.forEach((upcomingDate) => {
+    const yearNumber = upcomingDate.getFullYear();
+    const monthNumber = upcomingDate.getMonth();
+
+    // Loop over every category of trash
+    trashArray.forEach((trashObject) => {
+      const dateArray = trashObject.dates;
+
+      // Loop over every date stored in the dates property
+      dateArray[monthNumber].forEach((dayNumber) => {
+        cal.createEvent({
+          summary: trashObject.title,
+          allDay: true,
+          
+          start: new Date(yearNumber, monthNumber, dayNumber),
+          end: new Date(yearNumber, monthNumber, dayNumber),
+        });
+      });
+    });
+  });
+  
+  cal.serve(response);
 });
 
 app.get('/api/v1/vacation/:id', async (request: Request, response: Response) => {
