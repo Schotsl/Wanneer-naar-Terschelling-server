@@ -64,11 +64,13 @@ app.post('/api/v1/vacation', async (request: Request, response: Response) => {
     return;
   }
 
+  // The validator also allows DD/MM/YYYY so we have to normalize
+  const end = request.body.end.replace(`/`, `-`);
+  const start = request.body.start.replace(`/`, `-`);
+
   // Store body properties in variables
-  const end = request.body.end;
   const title = request.body.title;
   const color = request.body.color;
-  const start = request.body.start;
   const family = request.body.family;
 
   if (family === undefined) {
