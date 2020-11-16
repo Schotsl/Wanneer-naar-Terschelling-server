@@ -70,8 +70,8 @@ app.post('/api/v1/vacation', async (request: Request, response: Response) => {
   const family = request.body.family;
 
   // The validator also allows DD/MM/YYYY so we have to normalize
-  const end = request.body.end.replace(new RegExp(`/`), `-`);
-  const start = request.body.start.replace(new RegExp(`/`), `-`);  
+  const end = request.body.end.replace(new RegExp(`/`, `g`), `-`);
+  const start = request.body.start.replace(new RegExp(`/`, `g`), `-`);  
 
   console.log(start);
 
