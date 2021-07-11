@@ -1,45 +1,66 @@
-name: Build and Deploy
+name: Checks
+
 on:
   push:
     branches:
       - main
 
 jobs:
-  build:
-    name: Build
+  quality:
+    name: Quality
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@master
+      - name: Checkout sources
+        uses: actions/checkout@v2
+
+      - name: Setup latest deno version
+        uses: denolib/setup-deno@v2
+        with:
+          deno-version: v1.x
+      - name: Run deno fmt
+        run: deno fmt --check src/**/*.ts
+
       - name: Install Dependencies
         run: npm install
-        working-directory: ./functions
-      - name: Build
-        run: npm run build
-        working-directory: ./functions
-      - name: Archive Production Artifact
-        uses: actions/upload-artifact@master
-        with:
-          name: dist
-          path: functions/lib
-  deploy:
-    name: Deploy
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@master
-      - name: Download Artifact
-        uses: actions/download-artifact@master
-        with:
-          name: dist
-          path: functions/lib
-      - name: Install Dependencies
-        run: npm install
-        working-directory: ./functions
-      - name: Deploy to Firebase
-        uses: w9jds/firebase-action@master
-        with:
-          args: deploy --only functions
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE }}
+      - name: Run npm run lint
+        run: npm run lint
+
+  # build:
+  #   name: Build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout Repo
+  #       uses: actions/checkout@master
+  #     - name: Install Dependencies
+  #       run: npm install
+  #       working-directory: ./functions
+  #     - name: Build
+  #       run: npm run build
+  #       working-directory: ./functions
+  #     - name: Archive Production Artifact
+  #       uses: actions/upload-artifact@master
+  #       with:
+  #         name: dist
+  #         path: functions/lib
+  # deploy:
+  #   name: Deploy
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout Repo
+  #       uses: actions/checkout@master
+  #     - name: Download Artifact
+  #       uses: actions/download-artifact@master
+  #       with:
+  #         name: dist
+  #         path: functions/lib
+  #     - name: Install Dependencies
+  #       run: npm install
+  #       working-directory: ./functions
+  #     - name: Deploy to Firebase
+  #       uses: w9jds/firebase-action@master
+  #       with:
+  #         args: deploy --only functions
+  #       env:
+  #         FIREBASE_TOKEN: ${{ secrets.FIREBASE }}
